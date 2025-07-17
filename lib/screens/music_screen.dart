@@ -4,6 +4,7 @@ import 'package:meditone/controllers/meditation_controller.dart';
 import 'package:meditone/controllers/music_controller.dart';
 import 'package:meditone/models/music_model.dart';
 import 'package:meditone/themes/app_theme.dart';
+import 'package:blur/blur.dart';
 
 class MusicScreen extends StatelessWidget {
   final MusicController musicController = Get.find<MusicController>();
@@ -26,11 +27,14 @@ class MusicScreen extends StatelessWidget {
                 final music = musicController.musicTracks[index];
                 final isSelected =
                     controller.selectedMusic.value?.id == music.id;
+                final isPremium =
+                    index > 0; // First music is free, rest are premium
 
                 return _buildMusicCard(
                   music: music,
                   isSelected: isSelected,
                   context: context,
+                  isPremium: isPremium,
                 );
               },
             );
@@ -44,6 +48,7 @@ class MusicScreen extends StatelessWidget {
     required MusicModel music,
     required bool isSelected,
     required BuildContext context,
+    required bool isPremium,
   }) {
     return Stack(
       children: [
@@ -141,6 +146,44 @@ class MusicScreen extends StatelessWidget {
                 Icons.check,
                 color: Colors.white,
                 size: 15,
+              ),
+            ),
+          ),
+        // Premium overlay with blur effect
+        if (isPremium)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 16, // Match the bottom margin
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Stack(
+                children: [
+                  Blur(
+                    blur: 3.5,
+                    blurColor: Colors.black.withOpacity(0.1),
+                    child: Container(color: Colors.transparent),
+                  ),
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        'PREMIUM',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
