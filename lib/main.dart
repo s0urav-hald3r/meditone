@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:meditone/controllers/animation_controller.dart';
 import 'package:meditone/controllers/meditation_controller.dart';
 import 'package:meditone/controllers/music_controller.dart';
+import 'package:meditone/controllers/premium_controller.dart';
 import 'package:meditone/screens/main_screen.dart';
 import 'package:meditone/themes/app_theme.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
     final animationsController = Get.put(AnimationsController());
     final musicController = Get.put(MusicController());
     final meditationController = Get.put(MeditationController());
+    Get.put(PremiumController());
 
     // Set initial animation and music
     Future.delayed(const Duration(milliseconds: 100), () {

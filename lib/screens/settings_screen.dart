@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meditone/screens/premium_screen.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
@@ -33,8 +34,10 @@ class SettingsScreen extends StatelessWidget {
               icon: Icons.workspace_premium,
               iconColor: Colors.amber,
               onTap: () {
-                // Premium purchase logic
-                _showComingSoonDialog(context, 'Premium');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PremiumScreen()),
+                );
               },
             ),
             const SizedBox(height: 24),
