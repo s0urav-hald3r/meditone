@@ -15,6 +15,7 @@ class PremiumController extends GetxController {
       price: 4.99,
       period: 'week',
       savePercent: 0,
+      trialDays: 1,
     ),
     SubscriptionPlan(
       id: 'monthly',
@@ -22,6 +23,7 @@ class PremiumController extends GetxController {
       price: 19.99,
       period: 'month',
       savePercent: 0,
+      trialDays: 3,
     ),
     SubscriptionPlan(
       id: 'yearly',
@@ -29,6 +31,7 @@ class PremiumController extends GetxController {
       price: 49.99,
       period: 'year',
       savePercent: 79, // Saving compared to weekly plan
+      trialDays: 0,
     ),
   ];
 
@@ -101,6 +104,7 @@ class SubscriptionPlan {
   final double price;
   final String period;
   final int savePercent;
+  final int trialDays;
 
   SubscriptionPlan({
     required this.id,
@@ -108,6 +112,7 @@ class SubscriptionPlan {
     required this.price,
     required this.period,
     required this.savePercent,
+    required this.trialDays,
   });
 }
 

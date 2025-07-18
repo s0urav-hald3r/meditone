@@ -4,6 +4,14 @@
 
 This document describes the premium functionality implemented in the Meditone app, which restricts free users from accessing premium animations and music tracks.
 
+## Subscription Plans
+
+The app offers three subscription plans with the following trial periods:
+
+- **Weekly Plan**: $4.99/week with 1-day free trial
+- **Monthly Plan**: $19.99/month with 3-day free trial
+- **Yearly Plan**: $49.99/year with no trial (79% savings compared to weekly)
+
 ## How It Works
 
 ### Premium Status
@@ -60,8 +68,9 @@ This document describes the premium functionality implemented in the Meditone ap
 ## Files Modified
 
 - `lib/controllers/meditation_controller.dart`: Added premium checks
-- `lib/controllers/premium_controller.dart`: Added toggle method for testing
+- `lib/controllers/premium_controller.dart`: Added toggle method for testing and trial periods for subscription plans
 - `lib/screens/settings_screen.dart`: Added premium status indicator
+- `lib/screens/premium_screen.dart`: Updated to display trial information in subscription cards and purchase button
 - `lib/main.dart`: Added route definitions
 - `lib/screens/animations_screen.dart`: Updated comments
 - `lib/screens/music_screen.dart`: Updated comments

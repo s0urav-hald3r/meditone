@@ -165,8 +165,27 @@ class PremiumScreen extends StatelessWidget {
                 ],
               ),
             ),
+            if (plan.trialDays > 0)
+              Container(
+                width: 100,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppTheme.successColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  '${plan.trialDays} DAY${plan.trialDays == 1 ? '' : 'S'} TRIAL',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
             if (plan.savePercent > 0)
               Container(
+                width: 100,
+                alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppTheme.successColor,
@@ -175,7 +194,7 @@ class PremiumScreen extends StatelessWidget {
                 child: Text(
                   'SAVE ${plan.savePercent}%',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -320,7 +339,9 @@ class PremiumScreen extends StatelessWidget {
               : Text(
                   selectedPlan == null
                       ? 'Select a Plan'
-                      : 'Subscribe for \$${selectedPlan.price}/${selectedPlan.period}',
+                      : selectedPlan.trialDays > 0
+                          ? 'Start ${selectedPlan.trialDays} day${selectedPlan.trialDays == 1 ? '' : 's'} free trial'
+                          : 'Subscribe for \$${selectedPlan.price}/${selectedPlan.period}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
