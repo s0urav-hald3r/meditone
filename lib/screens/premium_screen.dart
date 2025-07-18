@@ -20,7 +20,7 @@ class PremiumScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -195,9 +195,8 @@ class PremiumScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
-        ...premiumController.premiumFeatures.map((feature) {
-          return _buildFeatureItem(context, feature);
-        }).toList(),
+        ...premiumController.premiumFeatures
+            .map((feature) => _buildFeatureItem(context, feature)),
       ],
     );
   }

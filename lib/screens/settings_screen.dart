@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:meditone/screens/premium_screen.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:get/get.dart';
-import 'package:meditone/controllers/premium_controller.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -20,7 +18,7 @@ class SettingsScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -79,10 +77,10 @@ class SettingsScreen extends StatelessWidget {
               subtitle: 'If you enjoy using Meditone, please rate us!',
               icon: Icons.star_outline,
               iconColor: Colors.amber,
-              onTap: () {
-                // Open app store rating page
-                _launchURL(
-                    'https://play.google.com/store/apps/details?id=studio.meditone.app');
+              onTap: () async {
+                if (await InAppReview.instance.isAvailable()) {
+                  InAppReview.instance.requestReview();
+                }
               },
             ),
             const SizedBox(height: 12),
@@ -107,41 +105,6 @@ class SettingsScreen extends StatelessWidget {
               subtitle: '1.0.0',
               icon: Icons.info_outline,
               onTap: null,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Testing',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            Obx(() {
-              final premiumController = Get.find<PremiumController>();
-              return _buildSettingsCard(
-                context,
-                title: 'Premium Status',
-                subtitle: premiumController.isPremium.value
-                    ? 'Premium User'
-                    : 'Free User',
-                icon: premiumController.isPremium.value
-                    ? Icons.workspace_premium
-                    : Icons.person,
-                iconColor:
-                    premiumController.isPremium.value ? Colors.amber : null,
-                onTap: () {
-                  premiumController.togglePremiumStatus();
-                },
-              );
-            }),
-            const SizedBox(height: 12),
-            _buildSettingsCard(
-              context,
-              title: 'Test Premium Redirection',
-              subtitle: 'Test the premium screen redirection',
-              icon: Icons.navigation,
-              onTap: () {
-                final premiumController = Get.find<PremiumController>();
-                premiumController.testPremiumRedirection();
-              },
             ),
           ],
         ),
@@ -210,28 +173,6 @@ class SettingsScreen extends StatelessWidget {
     Share.share(
       'Check out Meditone, the best meditation app! https://example.com/meditone',
       subject: 'Try Meditone App',
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context, String feature) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceColor,
-        title: Text('Coming Soon',
-            style: Theme.of(context).textTheme.headlineSmall),
-        content: Text(
-          '$feature will be available soon!',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK',
-                style: TextStyle(color: AppTheme.primaryColor)),
-          ),
-        ],
-      ),
     );
   }
 }
