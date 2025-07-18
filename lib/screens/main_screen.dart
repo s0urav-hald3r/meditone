@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meditone/screens/animations_screen.dart';
 import 'package:meditone/screens/home_screen.dart';
 import 'package:meditone/screens/music_screen.dart';
+import 'package:meditone/screens/settings_screen.dart';
 import 'package:meditone/themes/app_theme.dart';
 
 class MainScreen extends StatefulWidget {
@@ -36,7 +37,12 @@ class _MainScreenState extends State<MainScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
           ),
         ],
       ),

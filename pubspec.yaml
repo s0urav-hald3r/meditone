@@ -53,6 +53,12 @@ dependencies:
   # Blur effect
   blur: ^3.1.0
 
+  # URL launcher for opening links
+  url_launcher: ^6.2.5
+
+  # Share functionality
+  share_plus: ^7.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
