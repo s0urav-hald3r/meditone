@@ -21,7 +21,7 @@ class MusicScreen extends StatelessWidget {
         child: GetBuilder<MeditationController>(
           builder: (controller) {
             return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
               itemCount: musicController.musicTracks.length,
               itemBuilder: (context, index) {
                 final music = musicController.musicTracks[index];
@@ -56,6 +56,7 @@ class MusicScreen extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 16),
           child: InkWell(
             onTap: () {
+              // The premium check is now handled in the meditation controller
               meditationController.setMusic(music);
             },
             borderRadius: BorderRadius.circular(16),
@@ -158,32 +159,38 @@ class MusicScreen extends StatelessWidget {
             bottom: 16, // Match the bottom margin
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Stack(
-                children: [
-                  Blur(
-                    blur: 3.5,
-                    blurColor: Colors.black.withOpacity(0.1),
-                    child: Container(color: Colors.transparent),
-                  ),
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'PREMIUM',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+              child: GestureDetector(
+                onTap: () {
+                  // The premium check is now handled in the meditation controller
+                  meditationController.setMusic(music);
+                },
+                child: Stack(
+                  children: [
+                    Blur(
+                      blur: 3.5,
+                      blurColor: Colors.black.withOpacity(0.1),
+                      child: Container(color: Colors.transparent),
+                    ),
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'PREMIUM',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

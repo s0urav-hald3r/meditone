@@ -2,6 +2,9 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:meditone/models/animation_model.dart';
 import 'package:meditone/models/music_model.dart';
+import 'package:meditone/controllers/premium_controller.dart';
+import 'package:meditone/controllers/animation_controller.dart';
+import 'package:meditone/controllers/music_controller.dart';
 
 class MeditationController extends GetxController {
   // Audio player
@@ -54,6 +57,20 @@ class MeditationController extends GetxController {
 
   // Set selected animation
   void setAnimation(AnimationModel animation) {
+    final premiumController = Get.find<PremiumController>();
+
+    // Check if this is a premium animation (not the first one) and user is not premium
+    final animationsController = Get.find<AnimationsController>();
+    final animationIndex = animationsController.animations.indexOf(animation);
+    final isPremiumAnimation = animationIndex > 0;
+    final isPremiumUser = premiumController.isPremium.value;
+
+    if (isPremiumAnimation && !isPremiumUser) {
+      // Redirect to premium screen for free users
+      Get.toNamed('/premium');
+      return;
+    }
+
     // Force update by setting to null first and then to the new value
     selectedAnimation.value = null;
     Future.delayed(const Duration(milliseconds: 50), () {
@@ -64,6 +81,20 @@ class MeditationController extends GetxController {
 
   // Set selected music
   void setMusic(MusicModel music) async {
+    final premiumController = Get.find<PremiumController>();
+
+    // Check if this is a premium music (not the first one) and user is not premium
+    final musicController = Get.find<MusicController>();
+    final musicIndex = musicController.musicTracks.indexOf(music);
+    final isPremiumMusic = musicIndex > 0;
+    final isPremiumUser = premiumController.isPremium.value;
+
+    if (isPremiumMusic && !isPremiumUser) {
+      // Redirect to premium screen for free users
+      Get.toNamed('/premium');
+      return;
+    }
+
     final wasPlaying = isPlaying.value;
 
     // If currently playing, pause first
@@ -76,7 +107,7 @@ class MeditationController extends GetxController {
 
     // Load the new music
     await audioPlayer.setAsset(music.path);
-    totalDuration.value = (await audioPlayer.duration)?.inSeconds ?? 0;
+    // Duration will be updated via the durationStream listener
 
     // If was playing before, resume with new music
     if (wasPlaying) {
@@ -127,7 +158,7 @@ class MeditationController extends GetxController {
     animationPaused.value = true;
 
     // Reset position to beginning
-    await audioPlayer.seek(Duration.zero);
+    audioPlayer.seek(Duration.zero);
     update(); // Force UI update
   }
 

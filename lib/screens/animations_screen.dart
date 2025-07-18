@@ -23,7 +23,7 @@ class AnimationsScreen extends StatelessWidget {
         child: GetBuilder<MeditationController>(
           builder: (controller) {
             return GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
@@ -60,6 +60,7 @@ class AnimationsScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
+        // The premium check is now handled in the meditation controller
         meditationController.setAnimation(animation);
       },
       borderRadius: BorderRadius.circular(16),
@@ -149,32 +150,38 @@ class AnimationsScreen extends StatelessWidget {
             Positioned.fill(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Stack(
-                  children: [
-                    Blur(
-                      blur: 3.5,
-                      blurColor: Colors.black.withOpacity(0.1),
-                      child: Container(color: Colors.transparent),
-                    ),
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text(
-                          'PREMIUM',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                child: GestureDetector(
+                  onTap: () {
+                    // The premium check is now handled in the meditation controller
+                    meditationController.setAnimation(animation);
+                  },
+                  child: Stack(
+                    children: [
+                      Blur(
+                        blur: 3.5,
+                        blurColor: Colors.black.withOpacity(0.1),
+                        child: Container(color: Colors.transparent),
+                      ),
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            'PREMIUM',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

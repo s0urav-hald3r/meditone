@@ -5,6 +5,7 @@ import 'package:meditone/controllers/meditation_controller.dart';
 import 'package:meditone/controllers/music_controller.dart';
 import 'package:meditone/controllers/premium_controller.dart';
 import 'package:meditone/screens/main_screen.dart';
+import 'package:meditone/screens/premium_screen.dart';
 import 'package:meditone/themes/app_theme.dart';
 
 void main() {
@@ -37,7 +38,11 @@ class MyApp extends StatelessWidget {
       title: 'Meditone',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const MainScreen(),
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => const MainScreen()),
+        GetPage(name: '/premium', page: () => PremiumScreen()),
+      ],
     );
   }
 }
