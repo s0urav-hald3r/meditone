@@ -105,25 +105,6 @@ class MusicScreen extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.access_time,
-                              size: 16,
-                              color: AppTheme.textTertiaryColor,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              music.duration,
-                              style: const TextStyle(
-                                fontFamily: 'Manrope',
-                                fontSize: 12,
-                                color: AppTheme.textTertiaryColor,
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),

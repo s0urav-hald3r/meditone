@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -77,31 +78,8 @@ class HomeScreen extends StatelessWidget {
       return Container(
         width: double.infinity,
         height: 300,
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.animation,
-              size: 80,
-              color: AppTheme.primaryColor.withOpacity(0.5),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No Animation Selected',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Select an animation from the Animations screen',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+        alignment: Alignment.center,
+        child: const CupertinoActivityIndicator(),
       );
     }
   }
