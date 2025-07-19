@@ -85,16 +85,6 @@ class PremiumController extends GetxController {
         const Duration(seconds: 2)); // Simulate network request
     return false; // No purchases to restore in this mock
   }
-
-  // Toggle premium status for testing
-  void togglePremiumStatus() {
-    isPremium.value = !isPremium.value;
-  }
-
-  // Test premium redirection
-  void testPremiumRedirection() {
-    Get.toNamed('/premium');
-  }
 }
 
 // Model class for subscription plans
