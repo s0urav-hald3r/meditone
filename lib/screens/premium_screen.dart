@@ -18,37 +18,61 @@ class PremiumScreen extends StatelessWidget {
         backgroundColor: AppTheme.backgroundColor,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Premium header
-              _buildPremiumHeader(context),
+      body: Column(
+        children: [
+          // Scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Premium header
+                    _buildPremiumHeader(context),
 
-              const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-              // Subscription plans
-              _buildSubscriptionPlans(context),
+                    // Subscription plans
+                    _buildSubscriptionPlans(context),
 
-              const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
-              // Premium features
-              _buildPremiumFeatures(context),
-
-              const SizedBox(height: 32),
-
-              // Purchase button
-              _buildPurchaseButton(context),
-
-              const SizedBox(height: 16),
-
-              // Legal links
-              _buildLegalLinks(context),
-            ],
+                    // Premium features
+                    _buildPremiumFeatures(context),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+
+          // Floating elements at the bottom
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, -2),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Purchase button
+                _buildPurchaseButton(context),
+
+                const SizedBox(height: 8),
+
+                // Legal links
+                _buildLegalLinks(context),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -97,13 +121,21 @@ class PremiumScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 16),
-        Obx(() => Column(
-              children: premiumController.subscriptionPlans.map((plan) {
-                final isSelected =
-                    premiumController.selectedPlan.value?.id == plan.id;
-                return _buildSubscriptionPlanCard(context, plan, isSelected);
-              }).toList(),
-            )),
+        ListView.separated(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return Obx(() {
+              final plan = premiumController.subscriptionPlans[index];
+              final isSelected =
+                  premiumController.selectedPlan.value?.id == plan.id;
+              return _buildSubscriptionPlanCard(context, plan, isSelected);
+            });
+          },
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemCount: premiumController.subscriptionPlans.length,
+        ),
       ],
     );
   }
@@ -113,7 +145,6 @@ class PremiumScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => premiumController.selectPlan(plan),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
@@ -353,56 +384,50 @@ class PremiumScreen extends StatelessWidget {
   }
 
   Widget _buildLegalLinks(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildTextButton(
-              context,
-              'Restore Purchase',
-              () async {
-                final restored = await premiumController.restorePurchases();
-                if (restored) {
-                  Get.snackbar(
-                    'Success',
-                    'Your purchases have been restored',
-                    backgroundColor: AppTheme.successColor,
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                } else {
-                  Get.snackbar(
-                    'Info',
-                    'No purchases found to restore',
-                    backgroundColor: AppTheme.primaryColor,
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                }
-              },
-            ),
-          ],
+        _buildTextButton(
+          context,
+          'Restore Purchase',
+          () async {
+            final restored = await premiumController.restorePurchases();
+            if (restored) {
+              Get.snackbar(
+                'Success',
+                'Your purchases have been restored',
+                backgroundColor: AppTheme.successColor,
+                colorText: Colors.white,
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            } else {
+              Get.snackbar(
+                'Info',
+                'No purchases found to restore',
+                backgroundColor: AppTheme.primaryColor,
+                colorText: Colors.white,
+                snackPosition: SnackPosition.BOTTOM,
+              );
+            }
+          },
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildTextButton(
-              context,
-              'Privacy Policy',
-              () => _launchURL('https://example.com/privacy-policy'),
-            ),
-            const Text(
-              ' • ',
-              style: TextStyle(color: AppTheme.textTertiaryColor),
-            ),
-            _buildTextButton(
-              context,
-              'Terms of Use',
-              () => _launchURL('https://example.com/terms-of-use'),
-            ),
-          ],
+        const Text(
+          ' • ',
+          style: TextStyle(color: AppTheme.textTertiaryColor),
+        ),
+        _buildTextButton(
+          context,
+          'Privacy Policy',
+          () => _launchURL('https://example.com/privacy-policy'),
+        ),
+        const Text(
+          ' • ',
+          style: TextStyle(color: AppTheme.textTertiaryColor),
+        ),
+        _buildTextButton(
+          context,
+          'Terms of Use',
+          () => _launchURL('https://example.com/terms-of-use'),
         ),
       ],
     );
