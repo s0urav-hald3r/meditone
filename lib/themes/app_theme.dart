@@ -100,7 +100,7 @@ class AppTheme {
           fontWeight: FontWeight.normal,
         ),
       ),
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: primaryColor,
         secondary: secondaryColor,
         background: backgroundColor,

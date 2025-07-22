@@ -15,7 +15,7 @@ class PremiumController extends GetxController {
       price: 4.99,
       period: 'week',
       savePercent: 0,
-      trialDays: 1,
+      trialDays: 3,
     ),
     SubscriptionPlan(
       id: 'monthly',
@@ -23,7 +23,7 @@ class PremiumController extends GetxController {
       price: 19.99,
       period: 'month',
       savePercent: 0,
-      trialDays: 3,
+      trialDays: 0,
     ),
     SubscriptionPlan(
       id: 'yearly',
