@@ -5,14 +5,15 @@ import 'package:meditone/models/music_model.dart';
 import 'package:meditone/controllers/premium_controller.dart';
 import 'package:meditone/controllers/animation_controller.dart';
 import 'package:meditone/controllers/music_controller.dart';
+import 'package:meditone/utils/local_storage.dart';
 
 class MeditationController extends GetxController {
   // Audio player
   final AudioPlayer audioPlayer = AudioPlayer();
 
   // Selected animation and music
-  final Rx<AnimationModel?> selectedAnimation = Rx<AnimationModel?>(null);
-  final Rx<MusicModel?> selectedMusic = Rx<MusicModel?>(null);
+  final Rx<AnimationModel> selectedAnimation = AnimationModel().obs;
+  final Rx<MusicModel> selectedMusic = MusicModel().obs;
 
   // Meditation state
   final RxBool isPlaying = false.obs;
@@ -34,7 +35,6 @@ class MeditationController extends GetxController {
         progress.value = 1.0;
         animationPaused.value = true;
       }
-      update(); // Update UI when player state changes
     });
 
     // Listen to position changes
@@ -43,16 +43,49 @@ class MeditationController extends GetxController {
       if (totalDuration.value > 0) {
         progress.value = position.inSeconds / totalDuration.value;
       }
-      update(); // Update UI when position changes
     });
 
     // Listen to duration changes
     audioPlayer.durationStream.listen((duration) {
       if (duration != null) {
         totalDuration.value = duration.inSeconds;
-        update(); // Update UI when duration changes
       }
     });
+
+    // Restore saved selections
+    _restoreSavedSelections();
+  }
+
+  // Restore saved music and animation selections
+  void _restoreSavedSelections() {
+    final savedMusicId = LocalStorage.getSelectedMusicId();
+    final savedAnimationId = LocalStorage.getSelectedAnimationId();
+
+    final musicController = Get.find<MusicController>();
+    if (savedMusicId != null) {
+      final savedMusic = musicController.musicTracks.firstWhere(
+        (music) => music.id == savedMusicId,
+      );
+
+      selectedMusic.value = savedMusic;
+      setMusic(selectedMusic.value);
+    } else {
+      selectedMusic.value = musicController.musicTracks.first;
+      setMusic(selectedMusic.value);
+    }
+
+    final animationsController = Get.find<AnimationsController>();
+    if (savedAnimationId != null) {
+      final savedAnimation = animationsController.animations.firstWhere(
+        (animation) => animation.id == savedAnimationId,
+      );
+
+      selectedAnimation.value = savedAnimation;
+      setAnimation(selectedAnimation.value);
+    } else {
+      selectedAnimation.value = animationsController.animations.first;
+      setAnimation(selectedAnimation.value);
+    }
   }
 
   // Set selected animation
@@ -63,7 +96,7 @@ class MeditationController extends GetxController {
     final animationsController = Get.find<AnimationsController>();
     final animationIndex = animationsController.animations.indexOf(animation);
     final isPremiumAnimation = animationIndex > 0;
-    final isPremiumUser = premiumController.isPremium.value;
+    final isPremiumUser = premiumController.isPremium;
 
     if (isPremiumAnimation && !isPremiumUser) {
       // Redirect to premium screen for free users
@@ -71,12 +104,10 @@ class MeditationController extends GetxController {
       return;
     }
 
-    // Force update by setting to null first and then to the new value
-    selectedAnimation.value = null;
-    Future.delayed(const Duration(milliseconds: 50), () {
-      selectedAnimation.value = animation;
-      update(); // Force UI update
-    });
+    // Save the selected animation
+    LocalStorage.setSelectedAnimationId(animation.id ?? '');
+
+    selectedAnimation.value = animation;
   }
 
   // Set selected music
@@ -87,13 +118,16 @@ class MeditationController extends GetxController {
     final musicController = Get.find<MusicController>();
     final musicIndex = musicController.musicTracks.indexOf(music);
     final isPremiumMusic = musicIndex > 0;
-    final isPremiumUser = premiumController.isPremium.value;
+    final isPremiumUser = premiumController.isPremium;
 
     if (isPremiumMusic && !isPremiumUser) {
       // Redirect to premium screen for free users
       Get.toNamed('/premium');
       return;
     }
+
+    // Save the selected music
+    LocalStorage.setSelectedMusicId(music.id ?? '');
 
     final wasPlaying = isPlaying.value;
 
@@ -106,27 +140,23 @@ class MeditationController extends GetxController {
     selectedMusic.value = music;
 
     // Load the new music
-    await audioPlayer.setAsset(music.path);
+    await audioPlayer.setAsset(music.path ?? '');
     // Duration will be updated via the durationStream listener
 
     // If was playing before, resume with new music
     if (wasPlaying) {
       await audioPlayer.play();
     }
-
-    update(); // Force UI update
   }
 
   // Start meditation
   void startMeditation() async {
-    if (selectedMusic.value != null) {
+    if (selectedMusic.value.id != null) {
       isPlaying.value = true;
       isCompleted.value = false;
       animationPaused.value = false;
-      update(); // Update UI immediately
 
       await audioPlayer.play();
-      update(); // Update UI after play starts
     }
   }
 
@@ -135,17 +165,14 @@ class MeditationController extends GetxController {
     await audioPlayer.pause();
     isPlaying.value = false;
     animationPaused.value = true;
-    update(); // Force UI update
   }
 
   // Resume meditation
   void resumeMeditation() async {
     isPlaying.value = true;
     animationPaused.value = false;
-    update(); // Update UI immediately
 
     await audioPlayer.play();
-    update(); // Update UI after play starts
   }
 
   // Stop meditation
@@ -159,7 +186,6 @@ class MeditationController extends GetxController {
 
     // Reset position to beginning
     audioPlayer.seek(Duration.zero);
-    update(); // Force UI update
   }
 
   // Toggle play/pause

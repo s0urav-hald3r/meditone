@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:meditone/screens/premium_screen.dart';
+import 'package:meditone/controllers/premium_controller.dart';
 import 'package:meditone/themes/app_theme.dart';
+import 'package:meditone/utils/app_constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends GetView<PremiumController> {
   const SettingsScreen({super.key});
 
   @override
@@ -19,95 +22,113 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Account',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingsCard(
-              context,
-              title: 'Buy Premium',
-              subtitle: 'Unlock all features and remove ads',
-              icon: Icons.workspace_premium,
-              iconColor: Colors.amber,
-              onTap: () {
-                Navigator.push(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Obx(() {
+            if (controller.isPremium) {
+              return const SizedBox.shrink();
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Account',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 16),
+                _buildSettingsCard(
                   context,
-                  MaterialPageRoute(builder: (context) => PremiumScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Legal',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingsCard(
-              context,
-              title: 'Privacy Policy',
-              subtitle: 'Read our privacy policy',
-              icon: Icons.privacy_tip_outlined,
-              onTap: () {
-                _launchURL('https://example.com/privacy-policy');
-              },
-            ),
-            const SizedBox(height: 12),
-            _buildSettingsCard(
-              context,
-              title: 'Terms of Use',
-              subtitle: 'Read our terms of use',
-              icon: Icons.description_outlined,
-              onTap: () {
-                _launchURL('https://example.com/terms-of-use');
-              },
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Support Us',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingsCard(
-              context,
-              title: 'Rate the App',
-              subtitle: 'If you enjoy using Meditone, please rate us!',
-              icon: Icons.star_outline,
-              iconColor: Colors.amber,
-              onTap: () async {
-                if (await InAppReview.instance.isAvailable()) {
-                  InAppReview.instance.requestReview();
-                }
-              },
-            ),
-            const SizedBox(height: 12),
-            _buildSettingsCard(
-              context,
-              title: 'Share the App',
-              subtitle: 'Share Meditone with friends and family',
-              icon: Icons.share_outlined,
-              onTap: () {
-                _shareApp();
-              },
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'App Info',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            _buildSettingsCard(
-              context,
-              title: 'Version',
-              subtitle: '1.0.0',
-              icon: Icons.info_outline,
-              onTap: null,
-            ),
-          ],
-        ),
+                  title: 'Buy Premium',
+                  subtitle: 'Unlock all features and remove ads',
+                  icon: Icons.workspace_premium,
+                  iconColor: Colors.amber,
+                  onTap: () {
+                    Get.toNamed('/premium');
+                  },
+                ),
+                const SizedBox(height: 24),
+              ],
+            );
+          }),
+          Text(
+            'Legal',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          _buildSettingsCard(
+            context,
+            title: 'Privacy Policy',
+            subtitle: 'Read our privacy policy',
+            icon: Icons.privacy_tip_outlined,
+            onTap: () {
+              _launchURL(RevenueCatConfig.privacyPolicyUrl);
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildSettingsCard(
+            context,
+            title: 'Terms of Use',
+            subtitle: 'Read our terms of use',
+            icon: Icons.description_outlined,
+            onTap: () {
+              _launchURL(RevenueCatConfig.termsOfUseUrl);
+            },
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Support Us',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          _buildSettingsCard(
+            context,
+            title: 'Rate the App',
+            subtitle: 'If you enjoy using Meditone, please rate us!',
+            icon: Icons.star_outline,
+            iconColor: Colors.amber,
+            onTap: () async {
+              if (await InAppReview.instance.isAvailable()) {
+                InAppReview.instance.requestReview();
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildSettingsCard(
+            context,
+            title: 'Share the App',
+            subtitle: 'Share Meditone with friends and family',
+            icon: Icons.share_outlined,
+            onTap: () {
+              _shareApp();
+            },
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'App Info',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              String version = 'Loading...';
+              if (snapshot.hasData) {
+                version =
+                    'v${snapshot.data!.version} (${snapshot.data!.buildNumber})';
+              } else if (snapshot.hasError) {
+                version = 'Unknown';
+              }
+
+              return _buildSettingsCard(
+                context,
+                title: 'Version',
+                subtitle: version,
+                icon: Icons.info_outline,
+                onTap: null,
+              );
+            },
+          ),
+        ]),
       ),
     );
   }
@@ -171,7 +192,7 @@ class SettingsScreen extends StatelessWidget {
 
   void _shareApp() {
     Share.share(
-      'Check out Meditone, the best meditation app! https://example.com/meditone',
+      'Check out Meditone, the best meditation app! 🧘🏾\nhttps://apps.apple.com/app/id6748948216',
       subject: 'Try Meditone App',
     );
   }

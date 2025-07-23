@@ -1,13 +1,13 @@
 class AnimationModel {
-  final String id;
-  final String name;
-  final String path;
-  final String description;
+  final String? id;
+  final String? name;
+  final String? path;
+  final String? description;
 
   AnimationModel({
-    required this.id,
-    required this.name,
-    required this.path,
-    required this.description,
+    this.id,
+    this.name,
+    this.path,
+    this.description,
   });
 }

@@ -9,9 +9,17 @@ PODS:
   - just_audio (0.0.1):
     - Flutter
     - FlutterMacOS
+  - package_info_plus (0.4.5):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - purchases_flutter (8.10.6):
+    - Flutter
+    - PurchasesHybridCommon (= 14.2.0)
+  - PurchasesHybridCommon (14.2.0):
+    - RevenueCat (= 5.32.0)
+  - RevenueCat (5.32.0)
   - share_plus (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -23,9 +31,16 @@ DEPENDENCIES:
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/darwin`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - PurchasesHybridCommon
+    - RevenueCat
 
 EXTERNAL SOURCES:
   audio_session:
@@ -38,8 +53,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/in_app_review/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/darwin"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  purchases_flutter:
+    :path: ".symlinks/plugins/purchases_flutter/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   url_launcher_ios:
@@ -51,10 +70,14 @@ SPEC CHECKSUMS:
   flutter_native_splash: 6cad9122ea0fad137d23137dd14b937f3e90b145
   in_app_review: 5596fe56fab799e8edb3561c03d053363ab13457
   just_audio: 4e391f57b79cad2b0674030a00453ca5ce817eed
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  purchases_flutter: 7f2f923fde8ab75125c3e85522a43f6ed1253580
+  PurchasesHybridCommon: f1650b33e9a1dd04d5e8a40dfe757f39e63f935c
+  RevenueCat: 7e1d0768fb287c9983173c9b28e39ccbeeb828a9
   share_plus: de6030e33b4e106470e09322d87cf2a4258d2d1d
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: 83f6a08c58d4b249cda5d50acce1e33fac59623c
 
 COCOAPODS: 1.16.2

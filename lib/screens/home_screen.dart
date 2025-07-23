@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:meditone/controllers/meditation_controller.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:meditone/widgets/wave_visualizer.dart';
+import 'package:meditone/widgets/premium_banner.dart';
 
 class HomeScreen extends StatelessWidget {
   final MeditationController meditationController =
@@ -14,61 +15,66 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MeditationController>(
-      builder: (controller) {
-        return Scaffold(
-          backgroundColor: AppTheme.backgroundColor,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: Center(
-                      child: _buildAnimationSection(context, controller),
-                    ),
+    return Obx(() {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundColor,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+
+                // Premium banner at the top
+                const PremiumBanner(
+                  title: 'Unlock Premium Features',
+                  subtitle:
+                      'Get unlimited animations, music, and ad-free experience',
+                ),
+
+                Expanded(
+                  child: Center(
+                    child: _buildAnimationSection(context),
                   ),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildMusicInfoSection(context, controller),
-                        const SizedBox(height: 16),
-                        _buildWaveSection(controller),
-                        const SizedBox(height: 16),
-                        _buildTimerSection(context, controller),
-                        const SizedBox(height: 16),
-                        _buildControlsSection(context, controller),
-                      ],
-                    ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceColor,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMusicInfoSection(context),
+                      const SizedBox(height: 16),
+                      _buildWaveSection(),
+                      const SizedBox(height: 16),
+                      _buildTimerSection(context),
+                      const SizedBox(height: 16),
+                      _buildControlsSection(context),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
-  Widget _buildAnimationSection(
-      BuildContext context, MeditationController controller) {
-    final selectedAnimation = controller.selectedAnimation.value;
-    final isAnimating =
-        controller.isPlaying.value && !controller.animationPaused.value;
+  Widget _buildAnimationSection(BuildContext context) {
+    final selectedAnimation = meditationController.selectedAnimation.value;
+    final isAnimating = meditationController.isPlaying.value &&
+        !meditationController.animationPaused.value;
 
-    if (selectedAnimation != null) {
+    if (selectedAnimation.id != null) {
       return Lottie.asset(
-        selectedAnimation.path,
+        selectedAnimation.path ?? '',
         width: double.infinity,
         height: 300,
         fit: BoxFit.contain,
@@ -84,9 +90,8 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildMusicInfoSection(
-      BuildContext context, MeditationController controller) {
-    final selectedMusic = controller.selectedMusic.value;
+  Widget _buildMusicInfoSection(BuildContext context) {
+    final selectedMusic = meditationController.selectedMusic.value;
 
     return Row(
       children: [
@@ -108,13 +113,13 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                selectedMusic?.name ?? 'No Music Selected',
+                selectedMusic.name ?? 'No Music Selected',
                 style: Theme.of(context).textTheme.titleLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                selectedMusic?.description ??
+                selectedMusic.description ??
                     'Select music from the Music screen',
                 style: Theme.of(context).textTheme.bodyMedium,
                 maxLines: 1,
@@ -127,35 +132,35 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWaveSection(MeditationController controller) {
-    final isAnimating =
-        controller.isPlaying.value && !controller.animationPaused.value;
+  Widget _buildWaveSection() {
+    final isAnimating = meditationController.isPlaying.value &&
+        !meditationController.animationPaused.value;
     return WaveVisualizer(
-      progress: controller.progress.value,
+      progress: meditationController.progress.value,
       isPlaying: isAnimating,
     );
   }
 
-  Widget _buildTimerSection(
-      BuildContext context, MeditationController controller) {
+  Widget _buildTimerSection(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          controller.formatDuration(controller.currentDuration.value),
+          meditationController
+              .formatDuration(meditationController.currentDuration.value),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         Text(
-          controller.formatDuration(controller.totalDuration.value),
+          meditationController
+              .formatDuration(meditationController.totalDuration.value),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
   }
 
-  Widget _buildControlsSection(
-      BuildContext context, MeditationController controller) {
-    if (controller.isPlaying.value) {
+  Widget _buildControlsSection(BuildContext context) {
+    if (meditationController.isPlaying.value) {
       // Playing state - show pause and stop
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -164,21 +169,21 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.pause_rounded,
             label: 'Pause',
             onTap: () {
-              controller.pauseMeditation();
+              meditationController.pauseMeditation();
             },
           ),
           _buildControlButton(
             icon: Icons.stop_rounded,
             label: 'End',
             onTap: () {
-              controller.stopMeditation();
+              meditationController.stopMeditation();
             },
             isPrimary: false,
           ),
         ],
       );
-    } else if (controller.currentDuration.value > 0 &&
-        !controller.isCompleted.value) {
+    } else if (meditationController.currentDuration.value > 0 &&
+        !meditationController.isCompleted.value) {
       // Paused state - show resume and stop
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -187,14 +192,14 @@ class HomeScreen extends StatelessWidget {
             icon: Icons.play_arrow_rounded,
             label: 'Resume',
             onTap: () {
-              controller.resumeMeditation();
+              meditationController.resumeMeditation();
             },
           ),
           _buildControlButton(
             icon: Icons.stop_rounded,
             label: 'End',
             onTap: () {
-              controller.stopMeditation();
+              meditationController.stopMeditation();
             },
             isPrimary: false,
           ),
@@ -207,8 +212,8 @@ class HomeScreen extends StatelessWidget {
           icon: Icons.play_arrow_rounded,
           label: 'Start Meditation',
           onTap: () {
-            if (controller.selectedMusic.value != null) {
-              controller.startMeditation();
+            if (meditationController.selectedMusic.value.id != null) {
+              meditationController.startMeditation();
             } else {
               Get.snackbar(
                 'No Music Selected',
