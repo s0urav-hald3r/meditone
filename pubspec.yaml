@@ -63,7 +63,7 @@ dependencies:
   url_launcher: ^6.2.5
 
   # Share functionality
-  share_plus: ^7.2.2
+  share_plus: ^11.0.0
   in_app_review: ^2.0.10
   flutter_native_splash: ^2.4.4
 

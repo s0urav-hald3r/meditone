@@ -75,7 +75,7 @@ SPEC CHECKSUMS:
   purchases_flutter: 7f2f923fde8ab75125c3e85522a43f6ed1253580
   PurchasesHybridCommon: f1650b33e9a1dd04d5e8a40dfe757f39e63f935c
   RevenueCat: 7e1d0768fb287c9983173c9b28e39ccbeeb828a9
-  share_plus: de6030e33b4e106470e09322d87cf2a4258d2d1d
+  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: 83f6a08c58d4b249cda5d50acce1e33fac59623c

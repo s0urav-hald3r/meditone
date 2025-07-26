@@ -188,11 +188,14 @@ class PremiumScreen extends GetView<PremiumController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.title,
+                  '${product.priceString} / ${product.title == 'Weekly' ? 'week' : product.title == 'Monthly' ? 'month' : 'year'}',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Text(
-                  product.priceString,
+                  product.description
+                      .split(' ')
+                      .map((e) => e.capitalize)
+                      .join(' '),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -372,7 +375,7 @@ class PremiumScreen extends GetView<PremiumController> {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: AppTheme.textSecondaryColor,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         textStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
