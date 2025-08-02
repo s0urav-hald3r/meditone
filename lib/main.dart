@@ -69,7 +69,7 @@ void main() async {
   // Enable device preview in debug mode
   runApp(
     DevicePreview(
-      enabled: kDebugMode,
+      enabled: false,
       builder: (context) => const MyApp(),
     ),
   );
