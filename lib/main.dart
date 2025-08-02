@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:meditone/screens/settings_screen.dart';
+import 'package:meditone/services/store_config.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:meditone/controllers/animation_controller.dart';
 import 'package:meditone/controllers/meditation_controller.dart';
@@ -45,6 +46,14 @@ void main() async {
   // Initialize local storage
   await LocalStorage.init();
 
+  // Configure store for in-app purchase
+  if (Platform.isIOS) {
+    StoreConfig(
+      store: Store.appStore,
+      apiKey: RevenueCatConfig.appleApiKey,
+    );
+  }
+
   // Configure RevenueCat
   await _configureRevenueCat();
 
@@ -64,7 +73,7 @@ class DataBinding extends Bindings {
     Get.lazyPut(() => AnimationsController());
     Get.lazyPut(() => MusicController());
     Get.lazyPut(() => MeditationController());
-    Get.lazyPut(() => PremiumController());
+    Get.put(PremiumController());
   }
 }
 

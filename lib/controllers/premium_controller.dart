@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:meditone/services/store_config.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:meditone/utils/app_constant.dart';
 import 'package:meditone/utils/local_storage.dart';
@@ -69,6 +70,12 @@ class PremiumController extends GetxController {
 
   // Fetch available products from RevenueCat
   Future<void> _fetchProducts() async {
+    bool isInitialized = await Purchases.isConfigured;
+    debugPrint('isInitialized: $isInitialized');
+
+    await Purchases.configure(
+        PurchasesConfiguration(StoreConfig.instance.apiKey));
+
     try {
       isLoading = true;
 
@@ -79,12 +86,14 @@ class PremiumController extends GetxController {
       ];
 
       final products = await Purchases.getProducts(productIds);
+      debugPrint('Store products: ${products.length}');
 
       availableProducts = products;
 
       // Set first product as default selection
-      if (products.isNotEmpty) {
-        selectedProduct = products.first;
+      if (availableProducts.isNotEmpty) {
+        selectedProduct = availableProducts.first;
+        debugPrint('Selected product: ${selectedProduct?.identifier}');
       }
     } catch (e) {
       debugPrint('Error fetching products: $e');

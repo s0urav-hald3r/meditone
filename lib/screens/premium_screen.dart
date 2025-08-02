@@ -28,7 +28,12 @@ class PremiumScreen extends GetView<PremiumController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Premium header
-                    _buildPremiumHeader(context),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildPremiumHeader(context),
+                      ],
+                    ),
 
                     const SizedBox(height: 24),
 
