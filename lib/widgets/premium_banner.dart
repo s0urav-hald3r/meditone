@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meditone/controllers/premium_controller.dart';
 import 'package:meditone/themes/app_theme.dart';
+import 'package:meditone/utils/responsive_utils.dart';
 
 class PremiumBanner extends GetView<PremiumController> {
   final String title;
@@ -18,8 +19,8 @@ class PremiumBanner extends GetView<PremiumController> {
       }
 
       return Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(16),
+        margin: ResponsiveUtils.getAdaptiveEdgeInsets(context),
+        padding: ResponsiveUtils.getAdaptiveEdgeInsets(context),
         decoration: BoxDecoration(
           gradient: AppTheme.primaryGradient,
           borderRadius: BorderRadius.circular(16),
@@ -55,9 +56,10 @@ class PremiumBanner extends GetView<PremiumController> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize:
+                            ResponsiveUtils.getAdaptiveFontSize(context, 16),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -66,7 +68,8 @@ class PremiumBanner extends GetView<PremiumController> {
                       subtitle,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
-                        fontSize: 14,
+                        fontSize:
+                            ResponsiveUtils.getAdaptiveFontSize(context, 14),
                       ),
                     ),
                   ],
@@ -100,8 +103,14 @@ class CompactPremiumBanner extends GetView<PremiumController> {
       }
 
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        margin: EdgeInsets.symmetric(
+          horizontal: ResponsiveUtils.getAdaptivePadding(context),
+          vertical: ResponsiveUtils.getAdaptiveSpacing(context) * 0.5,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveUtils.getAdaptiveSpacing(context) * 0.75,
+          vertical: ResponsiveUtils.getAdaptiveSpacing(context) * 0.5,
+        ),
         decoration: BoxDecoration(
           gradient: AppTheme.primaryGradient,
           borderRadius: BorderRadius.circular(8),
@@ -120,9 +129,9 @@ class CompactPremiumBanner extends GetView<PremiumController> {
               const SizedBox(width: 8),
               Text(
                 message,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: ResponsiveUtils.getAdaptiveFontSize(context, 12),
                   fontWeight: FontWeight.w500,
                 ),
               ),

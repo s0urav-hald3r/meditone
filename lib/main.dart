@@ -16,6 +16,7 @@ import 'package:meditone/screens/premium_screen.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:meditone/utils/app_constant.dart';
 import 'package:meditone/utils/local_storage.dart';
+import 'package:device_preview/device_preview.dart';
 
 // Configure RevenueCat SDK
 Future<void> _configureRevenueCat() async {
@@ -64,7 +65,14 @@ void main() async {
 
   // whenever your initialization is completed, remove the splash screen:
   FlutterNativeSplash.remove();
-  runApp(const MyApp());
+
+  // Enable device preview in debug mode
+  runApp(
+    DevicePreview(
+      enabled: kDebugMode,
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
 class DataBinding extends Bindings {

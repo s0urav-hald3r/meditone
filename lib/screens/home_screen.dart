@@ -6,6 +6,7 @@ import 'package:meditone/controllers/meditation_controller.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:meditone/widgets/wave_visualizer.dart';
 import 'package:meditone/widgets/premium_banner.dart';
+import 'package:meditone/utils/responsive_utils.dart';
 
 class HomeScreen extends StatelessWidget {
   final MeditationController meditationController =
@@ -19,49 +20,10 @@ class HomeScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: AppTheme.backgroundColor,
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-
-                // Premium banner at the top
-                const PremiumBanner(
-                  title: 'Unlock Premium Features',
-                  subtitle:
-                      'Get unlimited animations, music, and ad-free experience',
-                ),
-
-                Expanded(
-                  child: Center(
-                    child: _buildAnimationSection(context),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildMusicInfoSection(context),
-                      const SizedBox(height: 16),
-                      _buildWaveSection(),
-                      const SizedBox(height: 16),
-                      _buildTimerSection(context),
-                      const SizedBox(height: 16),
-                      _buildControlsSection(context),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
+          child: ResponsiveUtils.isTablet(context) ||
+                  ResponsiveUtils.isDesktop(context)
+              ? _buildTabletLayout(context)
+              : _buildMobileLayout(context),
         ),
       );
     });
@@ -274,6 +236,100 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context) {
+    return Padding(
+      padding: ResponsiveUtils.getHorizontalPadding(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+
+          // Premium banner at the top
+          const PremiumBanner(
+            title: 'Unlock Premium Features',
+            subtitle: 'Get unlimited animations, music, and ad-free experience',
+          ),
+
+          Expanded(
+            child: Center(
+              child: _buildAnimationSection(context),
+            ),
+          ),
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+          Container(
+            padding:
+                EdgeInsets.all(ResponsiveUtils.getAdaptiveSpacing(context)),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceColor,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMusicInfoSection(context),
+                SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+                _buildWaveSection(),
+                SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+                _buildTimerSection(context),
+                SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+                _buildControlsSection(context),
+              ],
+            ),
+          ),
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabletLayout(BuildContext context) {
+    return Padding(
+      padding: ResponsiveUtils.getAdaptiveEdgeInsets(context),
+      child: Column(
+        children: [
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+          const PremiumBanner(
+            title: 'Unlock Premium Features',
+            subtitle: 'Get unlimited animations, music, and ad-free experience',
+          ),
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+          Expanded(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: ResponsiveUtils.getMaxContentWidth(context),
+                ),
+                child: _buildAnimationSection(context),
+              ),
+            ),
+          ),
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+          Container(
+            padding:
+                EdgeInsets.all(ResponsiveUtils.getAdaptiveSpacing(context)),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceColor,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildMusicInfoSection(context),
+                SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+                _buildWaveSection(),
+                SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+                _buildTimerSection(context),
+                SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+                _buildControlsSection(context),
+              ],
+            ),
+          ),
+          SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context)),
+        ],
       ),
     );
   }

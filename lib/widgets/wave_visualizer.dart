@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:meditone/themes/app_theme.dart';
+import 'package:meditone/utils/responsive_utils.dart';
 
 class WaveVisualizer extends StatelessWidget {
   final double progress;
@@ -16,7 +17,7 @@ class WaveVisualizer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80,
+      height: ResponsiveUtils.isTablet(context) ? 120 : 80,
       width: double.infinity,
       child: isPlaying ? _buildActiveWave() : _buildIdleWave(),
     );

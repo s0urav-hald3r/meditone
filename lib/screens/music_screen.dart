@@ -7,6 +7,7 @@ import 'package:meditone/models/music_model.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:meditone/widgets/premium_banner.dart';
 import 'package:blur/blur.dart';
+import 'package:meditone/utils/responsive_utils.dart';
 
 class MusicScreen extends StatelessWidget {
   MusicScreen({super.key});
@@ -26,25 +27,10 @@ class MusicScreen extends StatelessWidget {
             message: 'Unlock all premium music tracks',
           ),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: musicController.musicTracks.length,
-              itemBuilder: (context, index) {
-                return Obx(() {
-                  final music = musicController.musicTracks[index];
-                  final isSelected =
-                      meditationController.selectedMusic.value.id == music.id;
-                  final isPremium = !premiumController.isPremium && index > 0;
-
-                  return _buildMusicCard(
-                    music: music,
-                    isSelected: isSelected,
-                    context: context,
-                    isPremium: isPremium,
-                  );
-                });
-              },
-            ),
+            child: ResponsiveUtils.isTablet(context) ||
+                    ResponsiveUtils.isDesktop(context)
+                ? _buildTabletMusicLayout(context)
+                : _buildMobileMusicLayout(context),
           ),
         ]),
       ),
@@ -178,5 +164,55 @@ class MusicScreen extends StatelessWidget {
           ),
         ),
     ]);
+  }
+
+  Widget _buildMobileMusicLayout(BuildContext context) {
+    return ListView.builder(
+      padding: ResponsiveUtils.getAdaptiveEdgeInsets(context),
+      itemCount: musicController.musicTracks.length,
+      itemBuilder: (context, index) {
+        return Obx(() {
+          final music = musicController.musicTracks[index];
+          final isSelected =
+              meditationController.selectedMusic.value.id == music.id;
+          final isPremium = !premiumController.isPremium && index > 0;
+
+          return _buildMusicCard(
+            music: music,
+            isSelected: isSelected,
+            context: context,
+            isPremium: isPremium,
+          );
+        });
+      },
+    );
+  }
+
+  Widget _buildTabletMusicLayout(BuildContext context) {
+    return GridView.builder(
+      padding: ResponsiveUtils.getAdaptiveEdgeInsets(context),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: ResponsiveUtils.isTablet(context) ? 2 : 3,
+        crossAxisSpacing: ResponsiveUtils.getAdaptiveSpacing(context),
+        mainAxisSpacing: ResponsiveUtils.getAdaptiveSpacing(context),
+        childAspectRatio: 3.0,
+      ),
+      itemCount: musicController.musicTracks.length,
+      itemBuilder: (context, index) {
+        return Obx(() {
+          final music = musicController.musicTracks[index];
+          final isSelected =
+              meditationController.selectedMusic.value.id == music.id;
+          final isPremium = !premiumController.isPremium && index > 0;
+
+          return _buildMusicCard(
+            music: music,
+            isSelected: isSelected,
+            context: context,
+            isPremium: isPremium,
+          );
+        });
+      },
+    );
   }
 }

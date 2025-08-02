@@ -8,6 +8,7 @@ import 'package:meditone/models/animation_model.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:meditone/widgets/premium_banner.dart';
 import 'package:blur/blur.dart';
+import 'package:meditone/utils/responsive_utils.dart';
 
 class AnimationsScreen extends StatelessWidget {
   AnimationsScreen({super.key});
@@ -28,12 +29,12 @@ class AnimationsScreen extends StatelessWidget {
           ),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.all(20),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.8,
+              padding: ResponsiveUtils.getAdaptiveEdgeInsets(context),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ResponsiveUtils.getGridCrossAxisCount(context),
+                crossAxisSpacing: ResponsiveUtils.getAdaptiveSpacing(context),
+                mainAxisSpacing: ResponsiveUtils.getAdaptiveSpacing(context),
+                childAspectRatio: ResponsiveUtils.isTablet(context) ? 0.9 : 0.8,
               ),
               itemCount: animationController.animations.length,
               itemBuilder: (context, index) {

@@ -4,6 +4,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:meditone/controllers/premium_controller.dart';
 import 'package:meditone/themes/app_theme.dart';
 import 'package:meditone/utils/app_constant.dart';
+import 'package:meditone/utils/responsive_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PremiumScreen extends GetView<PremiumController> {
@@ -23,28 +24,11 @@ class PremiumScreen extends GetView<PremiumController> {
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Premium header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildPremiumHeader(context),
-                      ],
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Subscription plans
-                    _buildSubscriptionPlans(context),
-
-                    const SizedBox(height: 24),
-
-                    // Premium features
-                    _buildPremiumFeatures(context),
-                  ]),
+              padding: ResponsiveUtils.getAdaptiveEdgeInsets(context),
+              child: ResponsiveUtils.isTablet(context) ||
+                      ResponsiveUtils.isDesktop(context)
+                  ? _buildTabletPremiumLayout(context)
+                  : _buildMobilePremiumLayout(context),
             ),
           ),
         ),
@@ -81,6 +65,10 @@ class PremiumScreen extends GetView<PremiumController> {
 
   Widget _buildPremiumHeader(BuildContext context) {
     return Container(
+      width: ResponsiveUtils.isTablet(context) ||
+              ResponsiveUtils.isDesktop(context)
+          ? 350
+          : double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
         gradient: AppTheme.primaryGradient,
@@ -397,5 +385,60 @@ class PremiumScreen extends GetView<PremiumController> {
     } catch (e) {
       // Handle error silently
     }
+  }
+
+  Widget _buildMobilePremiumLayout(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Premium header
+        _buildPremiumHeader(context),
+
+        SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context) * 1.5),
+
+        // Subscription plans
+        _buildSubscriptionPlans(context),
+
+        SizedBox(height: ResponsiveUtils.getAdaptiveSpacing(context) * 1.5),
+
+        // Premium features
+        _buildPremiumFeatures(context),
+      ],
+    );
+  }
+
+  Widget _buildTabletPremiumLayout(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left side - Header and Plans
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Premium header
+              _buildPremiumHeader(context),
+
+              SizedBox(
+                  height: ResponsiveUtils.getAdaptiveSpacing(context) * 1.5),
+
+              // Subscription plans
+              _buildSubscriptionPlans(context),
+            ],
+          ),
+        ),
+        SizedBox(width: ResponsiveUtils.getAdaptiveSpacing(context)),
+        // Right side - Features
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Premium features
+              _buildPremiumFeatures(context),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
